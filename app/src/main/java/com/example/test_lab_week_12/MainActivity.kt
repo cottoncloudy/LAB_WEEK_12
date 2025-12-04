@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.test_lab_week_12.model.Movie
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.launch
+import java.util.Calendar
 
 class MainActivity : AppCompatActivity() {
     private val movieAdapter by lazy {
@@ -37,20 +38,23 @@ class MainActivity : AppCompatActivity() {
                 }
             })[MovieViewModel::class.java]
 
-        // --- BAGIAN INI YANG DIUBAH UNTUK PART 2 (FLOW) ---
-        // Menggunakan lifecycleScope dan repeatOnLifecycle untuk mengumpulkan data Flow
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-
-                // Launch coroutine untuk mengambil list film
                 launch {
                     movieViewModel.popularMovies.collect { movies ->
-                        // Di tahap ini filter dihapus dulu sesuai instruksi modul
-                        movieAdapter.addMovies(movies)
+                        // LOGIKA ASSIGNMENT: Filter & Sort di dalam Flow
+                        val currentYear = Calendar.getInstance().get(Calendar.YEAR).toString()
+
+                        val filteredMovies = movies
+                            .filter { movie ->
+                                movie.releaseDate?.startsWith(currentYear) == true
+                            }
+                            .sortedByDescending { it.popularity }
+
+                        movieAdapter.addMovies(filteredMovies)
                     }
                 }
 
-                // Launch coroutine untuk mengambil pesan error
                 launch {
                     movieViewModel.error.collect { error ->
                         if (error.isNotEmpty()) {
@@ -60,7 +64,6 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
-        // ---------------------------------------------------
     }
 
     private fun openMovieDetails(movie: Movie) {
