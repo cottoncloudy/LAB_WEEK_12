@@ -18,7 +18,6 @@ class MovieRepository(
     private val apiKey = "02e464701823dfa0e710aba4ae1ad5ef"
 
     fun fetchMovies(): Flow<List<Movie>> {
-        // ... (Kode flow yang sudah ada biarkan saja) ...
         return flow {
             val movieDao = movieDatabase.movieDao()
             val savedMovies = movieDao.getMovies()
@@ -37,14 +36,14 @@ class MovieRepository(
         }.flowOn(Dispatchers.IO)
     }
 
-    // --- TAMBAHKAN FUNGSI BARU INI ---
+    // --- TAMBAHKAN FUNGSI BARU INI (PART 3) ---
     suspend fun fetchMoviesFromNetwork() {
         val movieDao = movieDatabase.movieDao()
         try {
             val popularMovies = movieService.getPopularMovies(apiKey)
             val moviesFetched = popularMovies.results
 
-            // Simpan ke database (ini akan menimpa data lama karena ConflictStrategy.REPLACE)
+            // Simpan ke database (akan mereplace data lama karena conflict strategy)
             movieDao.addMovies(moviesFetched)
 
             Log.d("MovieRepository", "Success fetching data from network")

@@ -20,8 +20,8 @@ class MainActivity : AppCompatActivity() {
         // 1. Setup DataBinding
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
 
-        // 2. Setup ViewModel (SOLUSI BARU)
-        // Kita ambil Repository dari MovieApplication, bukan bikin baru pakai RetrofitInstance
+        // 2. Setup ViewModel (SOLUSI FIX)
+        // Kita ambil Repository dari MovieApplication (karena folder kamu sudah ada MovieApplication)
         val app = application as MovieApplication
         val movieRepository = app.movieRepository
         val viewModelFactory = MovieViewModelFactory(movieRepository)
@@ -29,11 +29,11 @@ class MainActivity : AppCompatActivity() {
         movieViewModel = ViewModelProvider(this, viewModelFactory)[MovieViewModel::class.java]
 
         // 3. Setup Adapter
-        // Pastikan langkah nomor 1 (tambah 'fun' di interface) sudah dilakukan
+        // Kita kasih aksi klik { } agar tidak error "No value passed for parameter"
         movieAdapter = MovieAdapter { movie ->
             Toast.makeText(this, "Membuka: ${movie.title}", Toast.LENGTH_SHORT).show()
 
-            // Opsional: Kode untuk pindah ke DetailsActivity
+            // Pindah ke DetailsActivity
             val intent = Intent(this, DetailsActivity::class.java)
             intent.putExtra(DetailsActivity.EXTRA_TITLE, movie.title)
             intent.putExtra(DetailsActivity.EXTRA_RELEASE, movie.releaseDate)

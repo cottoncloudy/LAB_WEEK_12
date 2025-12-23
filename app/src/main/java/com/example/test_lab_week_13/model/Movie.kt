@@ -1,18 +1,22 @@
 package com.example.test_lab_week_13.model
 
-import androidx.room.Entity
-import androidx.room.PrimaryKey
+import androidx.room.Entity // WAJIB ADA
+import androidx.room.PrimaryKey // WAJIB ADA
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
+// Tambahkan @Entity di sini agar dikenali sebagai tabel database
 @Entity(tableName = "movies")
 @JsonClass(generateAdapter = true)
 data class Movie(
-    @PrimaryKey // Menjadikan ID sebagai Primary Key
-    val id: Int, // Pindahkan id ke atas agar lebih rapi (opsional, tapi umum di Room)
+    // Tambahkan @PrimaryKey pada ID
+    @PrimaryKey
+    val id: Int = 0,
 
     val adult: Boolean = false,
-    val backdrop_path: String? = "", // Modul Part 2 Step 11: Cegah crash constraint
+
+    // Berikan default value kosong string agar tidak error constraint saat insert
+    val backdrop_path: String? = "",
 
     @field:Json(name = "original_language")
     val originalLanguage: String? = null,
