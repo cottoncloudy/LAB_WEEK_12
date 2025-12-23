@@ -1,0 +1,26 @@
+1. Mengapa MVVM itu penting? File mana yang mewakili Model, View, dan ViewModel?
+Jawab:
+MVVM (Model-View-ViewModel) penting karena memisahkan antarmuka pengguna (View) dari logika bisnis dan data (Model). Pemisahan ini membuat kode lebih mudah dipelihara (maintainable), lebih mudah diuji (testable), dan memudahkan pengembangan fitur baru tanpa mengganggu komponen lain.
+- Model: Mewakili lapisan data. File: Movie.kt, MovieDao.kt, MovieDatabase.kt, MovieRepository.kt.
+- View: Menampilkan data ke pengguna. File: MainActivity.kt, activity_main.xml, MovieAdapter.kt, RecyclerViewBinding.kt.
+- ViewModel: Mengambil data dari Model dan menyediakannya untuk View. File: MovieViewModel.kt.
+
+2. Di Bagian 1, Anda menerapkan Data Binding, mengapa ini lebih efisien daripada metode biasa?
+Jawab:
+Data Binding lebih efisien karena memungkinkan layout XML untuk terikat langsung dengan sumber data di ViewModel. Ini menghilangkan kebutuhan untuk menulis kode boilerplate seperti `findViewById` dan pembaruan UI manual di Activity/Fragment. Hal ini mengurangi risiko error (seperti NullPointerException), membuat kode lebih bersih, dan meningkatkan performa pengembangan.
+
+3. Di Bagian 2, Anda menerapkan Singleton Pattern, mengapa ini penting?
+Jawab:
+Singleton Pattern sangat penting untuk inisialisasi Database (Room) karena pembuatan instance database adalah proses yang "mahal" (memakan banyak resource memori dan waktu). Singleton memastikan bahwa hanya ada satu instance database yang dibuat selama siklus hidup aplikasi. Ini mencegah kebocoran memori (memory leaks) dan kondisi balapan (race conditions) saat mengakses data dari thread yang berbeda.
+
+4. Di Bagian 2 & 3, Anda menerapkan Repository Pattern, mengapa ini penting?
+Jawab:
+Repository Pattern penting karena berfungsi sebagai "satu-satunya sumber kebenaran" (single source of truth) untuk data aplikasi. Repository mengelola logika pengambilan data, memutuskan apakah data harus diambil dari server (API) atau dari penyimpanan lokal (Database). Ini memungkinkan aplikasi berjalan dalam mode offline (menggunakan cache lokal) dan memisahkan logika data dari UI.
+
+5. Di Bagian 3, Anda menerapkan WorkManager, adakah cara lain untuk memperbarui database dengan data terbaru selain menggunakan Worker?
+Jawab:
+Ya, ada beberapa cara lain, antara lain:
+- Menggunakan `SwipeRefreshLayout` untuk membiarkan pengguna memperbarui data secara manual.
+- Memanggil fungsi fetch data di method siklus hidup `onResume()` agar data diperbarui setiap kali pengguna membuka kembali aplikasi.
+- Menggunakan `AlarmManager` untuk penjadwalan (meskipun kurang efisien daya dibandingkan WorkManager).
+- Menggunakan `Handler` atau `Timer` untuk pembaruan berkala sederhana selama aplikasi sedang berjalan di layar depan.
